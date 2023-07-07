@@ -1,42 +1,28 @@
-import { useEffect, useState } from 'react';
 import { ContactForm } from './contactForm/contactForm';
 import { ContactList } from './contactList/contactList';
 import { Filter } from './filter/filter';
 import { FormHeader, MainContainer } from './App.styled';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, setFilter } from 'redux/actions';
 
-const contactsArr = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
 const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(window.localStorage.getItem('contacts')) ?? contactsArr
-  );
-  const [filtered, setFiltered] = useState('');
-
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const contacts = useSelector(state => state.contacts);
+  const filtered = useSelector(state => state.filters);
+  const dispatch = useDispatch();
 
   const handleSubmit = newContact => {
     if (contacts.find(contact => contact.name === newContact.name)) {
       toast.error(`${newContact.name} is already in contacts.`);
     } else {
-      setContacts(prevState => [newContact, ...prevState]);
+      dispatch(addContact(newContact));
     }
-  };
-
-  const deleteContact = contactId => {
-    setContacts(prev => prev.filter(contact => contact.id !== contactId));
   };
 
   const onFilter = event => {
     const { value } = event.currentTarget;
-    setFiltered(value);
+    dispatch(setFilter(value));
   };
 
   const filteredContacts = contacts.filter(contact =>
@@ -51,7 +37,7 @@ const App = () => {
 
       <FormHeader>Contacts</FormHeader>
       <Filter value={filtered} onFilter={onFilter} />
-      <ContactList contacts={filteredContacts} deleteContact={deleteContact} />
+      <ContactList contacts={filteredContacts} />
     </MainContainer>
   );
 };

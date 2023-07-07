@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { nanoid } from 'nanoid';
 import * as yup from 'yup';
 import {
   Container,
@@ -10,6 +9,7 @@ import {
   ErrorMsg,
   FormButton,
 } from './contactForm.styled.js';
+import { nanoid } from 'nanoid';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -23,6 +23,8 @@ const inValues = {
 };
 
 export const ContactForm = ({ onSubmit }) => {
+
+  
   const handleSubmit = (values, { resetForm }) => {
     const newContact = {
       id: nanoid(),
