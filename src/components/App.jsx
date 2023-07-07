@@ -5,11 +5,13 @@ import { FormHeader, MainContainer } from './App.styled';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, setFilter } from 'redux/actions';
+import { addContact } from 'redux/contactsSlice/contactsSlice';
+import { setFilter } from 'redux/filtersSlice/filtersSlice';
+import { getContact, getFilters } from 'redux/selectors';
 
 const App = () => {
-  const contacts = useSelector(state => state.contacts);
-  const filtered = useSelector(state => state.filters);
+  const contacts = useSelector(getContact);
+  const filtered = useSelector(getFilters);
   const dispatch = useDispatch();
 
   const handleSubmit = newContact => {
